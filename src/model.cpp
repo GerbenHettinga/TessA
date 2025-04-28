@@ -50,27 +50,49 @@ void Model::update() {
     controlmesh = ControlMesh(&mesh);
 }
 
-void Model::setSubdivisionLevel(unsigned level, unsigned degree) {
-    switch(settings->MeshMode) {
-        case MeshModes::PolyMesh : {
+SubdivisionMesh& Model::getSubdivisionMesh() {
+    switch (settings->MeshMode) {
+        case MeshModes::PolyMesh: {
             //nmesh.getSubdivisionMesh().dual();
         } break;
-        case MeshModes::ACC2 : {
-            ccmesh.getSubdivisionMesh().setSubdivisionLevel(level, degree);
+        case MeshModes::ACC2: {
+            return ccmesh.getSubdivisionMesh();
         } break;
-        case MeshModes::CubicGBS : {
-            gbsmesh.getSubdivisionMesh().setSubdivisionLevel(level, degree);
+        case MeshModes::CubicGBS: {
+            return gbsmesh.getSubdivisionMesh();
         } break;
-        case MeshModes::QuadraticGBS : {
-            q2gbsmesh.getSubdivisionMesh().setSubdivisionLevel(level, degree);
+        case MeshModes::QuadraticGBS: {
+            return q2gbsmesh.getSubdivisionMesh();
         } break;
-        case MeshModes::QuarticGBS : {
-            q4gbsmesh.getSubdivisionMesh().setSubdivisionLevel(level, degree);
+        case MeshModes::QuarticGBS: {
+            return q4gbsmesh.getSubdivisionMesh();
         } break;
-        case MeshModes::QuadMesh : {
-            quadmesh.getSubdivisionMesh().setSubdivisionLevel(level, degree);
+        case MeshModes::QuadMesh: {
+            return quadmesh.getSubdivisionMesh();
         } break;
     }
+
+    return quadmesh.getSubdivisionMesh();
+}
+
+int Model::getSubdivisionDegree()
+{
+    SubdivisionMesh& subdivisionMesh = getSubdivisionMesh();
+
+    return subdivisionMesh.getDegree();
+}
+
+int Model::getSubdivisionLevel()
+{
+    SubdivisionMesh& subdivisionMesh = getSubdivisionMesh();
+
+    return subdivisionMesh.getSubdivisionLevel();
+}
+
+void Model::setSubdivisionLevel(unsigned level, unsigned degree) {
+    SubdivisionMesh& subdivisionMesh = getSubdivisionMesh();
+
+    subdivisionMesh.setSubdivisionLevel(level, degree);
 }
 
 void Model::dual() {

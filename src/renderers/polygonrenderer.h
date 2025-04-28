@@ -13,6 +13,7 @@ public:
     void initShaders();
     void updateBuffers(Model& model);
     void render(Model& model);
+    void paintTessellation(int valency, int indexBufPointer, int numPatches);
 
 private:
     unsigned vao, vbo, nbo, uvbo, ibo;

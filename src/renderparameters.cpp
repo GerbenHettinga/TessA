@@ -2,12 +2,10 @@
 
 void RenderParameters::init() {
     //Set parameters for scene
-    m_lightPosition = glm::vec4(-0.0f, 5.0f, 10.0f, 1.0f);
+    m_lightPosition = glm::vec4(0.0f, 5.0f, 10.0f, 1.0f);
     m_lightIntensity = glm::vec3(1.0f, 1.0f, 1.0f);
     m_ambient = glm::vec3(0.15f, 0.15f, 0.15f);
     m_diffuse = glm::vec3(0.5f, .8f, .5f);
-
-    //MULTITESS: m_specular = glm::vec3(1.0f, 0.0f, 1.0f);
     m_specular = glm::vec3(0.2f, 1.0f, 0.5f);
     m_shininess = 50.0f;
     m_color = glm::vec3(0.0f, 0.7f, 0.2f);

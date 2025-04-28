@@ -1,67 +1,66 @@
 #include "subdivisionmesh.h"
 #include "../objectreader.h"
 
-SubdivisionMesh::SubdivisionMesh(Mesh* m) : m(m) {
-    subdivisionLevel = 0;
-    degree = 3;
+SubdivisionMesh::SubdivisionMesh(Mesh* m) : m_mesh(m) {
+    m_subdivisionLevel = 0;
+    m_degree = 3;
 }
 
-SubdivisionMesh::SubdivisionMesh(Mesh* m, unsigned d) : m(m) {
-    subdivisionLevel = 0;
-    degree = d;
+SubdivisionMesh::SubdivisionMesh(Mesh* m, unsigned d) : m_mesh(m) {
+    m_subdivisionLevel = 0;
+    m_degree = d;
 }
 
 Mesh* SubdivisionMesh::getCurrentLevel() {
-    if(subdivisionLevel == 0) {
-        return m;
+    if(m_subdivisionLevel == 0) {
+        return m_mesh;
     }
-    return &meshes[subdivisionLevel - 1];
+    return &m_meshes[m_subdivisionLevel - 1];
 }
 
 void SubdivisionMesh::linSubdivide() {
-    meshes[subdivisionLevel].linSubdivide();
+    m_meshes[m_subdivisionLevel].linSubdivide();
 }
 
 void SubdivisionMesh::dual() {
-    meshes[subdivisionLevel].dual();
+    m_meshes[m_subdivisionLevel].dual();
 }
 
 void SubdivisionMesh::evenSmooth() {
-    meshes[subdivisionLevel].evenSmooth();
+    m_meshes[m_subdivisionLevel].evenSmooth();
 }
 
 void SubdivisionMesh::oddSmooth() {
-    meshes[subdivisionLevel].oddSmooth();
+    m_meshes[m_subdivisionLevel].oddSmooth();
 }
 
 void SubdivisionMesh::update() {
-    subdivide(subdivisionLevel, degree);
+    subdivide(m_subdivisionLevel, m_degree);
     //setSubdivisionLevel(subdivisionLevel, degree);
 }
 
 void SubdivisionMesh::setSubdivisionLevel(unsigned level, unsigned degree) {
     subdivide(level >= 0 ? level : 0, degree);
 
-    this->degree = degree;
+    m_degree = degree;
 
-    subdivisionLevel = level;
+    m_subdivisionLevel = level;
 }
 
-
 void SubdivisionMesh::subdivide(int level, unsigned degree) {
-    meshes.clear();
-
+    m_meshes.clear();
+    m_meshes.reserve(10);
 
     size_t curLevel = 0;
-    while(meshes.size() <= std::max(0, level - 1) ) {
-        if(meshes.empty()) {
-            meshes.push_back(Mesh());
-            Mesh& newMesh = meshes.back();
-            m->subdivide(degree, newMesh);
+    while(m_meshes.size() <= std::max(0, level - 1) && m_meshes.size() < 10 ) {
+        if(m_meshes.empty()) {
+            m_meshes.push_back(Mesh());
+            Mesh& newMesh = m_meshes.back();
+            m_mesh->subdivide(degree, newMesh);
         } else {
-            meshes.push_back(Mesh());
-            Mesh& newMesh = meshes.back();
-            meshes[curLevel].subdivide(degree, newMesh);
+            m_meshes.push_back(Mesh());
+            Mesh& newMesh = m_meshes.back();
+            m_meshes[curLevel].subdivide(degree, newMesh);
             curLevel++;
         }
     }

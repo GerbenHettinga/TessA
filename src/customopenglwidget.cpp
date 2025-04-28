@@ -32,7 +32,7 @@
 
 CustomOpenGLWidget::CustomOpenGLWidget(){
     //polygon = new Polygon(8);
-    //model.set("Cube.obj", &settings);
+    model.set("../../Models/Cube.obj", &settings);
 
     qq = glm::quat(glm::vec3(0, 0, 0));
 
@@ -87,24 +87,6 @@ void CustomOpenGLWidget::updateBuffers(bool callUpdate) {
 }
 
 void CustomOpenGLWidget::initializeGL() {
-    //qDebug() << init;
-
-    /*
-    aTimer = new QTimer(this);
-    aTimer->setInterval(0);
-    connect(aTimer, SIGNAL(timeout()), this, SLOT(animate()));
-
-    eTimer = new QElapsedTimer();
-    eTimer->start();
-
-    debugLogger = new QOpenGLDebugLogger(this);
-    connect( debugLogger, SIGNAL( messageLogged( QOpenGLDebugMessage ) ), this, SLOT( onMessageLogged( QOpenGLDebugMessage ) ), Qt::DirectConnection );
-    if ( debugLogger->initialize() ) {
-        debugLogger->startLogging( QOpenGLDebugLogger::SynchronousLogging );
-        debugLogger->enableMessages();
-    }
-    */
-
     settings.init();
 
     std::string glVersion;
@@ -114,33 +96,18 @@ void CustomOpenGLWidget::initializeGL() {
     // Background color
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-    getError();
     initBuffers();
-
-    getError();
-    //qDebug() << e << "buffers";
     initTextures();
-    
-    getError();
-    //qDebug() << e << "textures";
-
-
-    getError();
-    //todo: unique pointers
+       
+    //todo: smart pointers
     renderers[MeshModes::ACC2] = new ACC2Renderer(&settings);
-    getError();
     renderers[MeshModes::CubicGBS] = new GBSRenderer(&settings);
-    getError();
     renderers[MeshModes::QuadraticGBS] = new GBSQuadraticRenderer(&settings);
-    getError();
     renderers[MeshModes::QuarticGBS] = new GBSQuarticRenderer(&settings);
-    getError();
     renderers[MeshModes::PolyMesh] = new PolygonRenderer(&settings);
-    getError();
     renderers[MeshModes::QuadMesh] = new QuadMeshRenderer(&settings);
-    getError();
     renderers[MeshModes::ControlMesh] = new ControlMeshRenderer(&settings);
-    getError();
+    
 
     PtSelected = -1;
 
@@ -150,13 +117,12 @@ void CustomOpenGLWidget::initializeGL() {
     Trans = glm::vec3(0.0, 0.0, -1.0);
     oldVec = glm::vec3(0.0 ,0.0, -1.0);
 
- 
-
     resizeGL(1280, 720);
 
     updateBuffers();
 
     setMatrix(true);
+    getError();
 }
 
 
@@ -211,8 +177,6 @@ void CustomOpenGLWidget::saveGeneratedGeometry(std::string filename) {
 
 
 void CustomOpenGLWidget::paintGL() {
-    getError();
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_DEPTH_TEST);
@@ -224,14 +188,13 @@ void CustomOpenGLWidget::paintGL() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
-    getError();
 
     renderers[settings.MeshMode]->render(model);
 
-    getError();
-
     if(settings.showControlMesh)
         renderers[MeshModes::ControlMesh]->render(model);
+
+    getError();
 
     if(settings.captureNoOfGeneratedPrimitives) {
         settings.genPrims = 0;
@@ -273,7 +236,7 @@ void CustomOpenGLWidget::setMatrix(bool Reset) {
 
     Matrix = glm::translate(Matrix, Trans);
     //todo: how to rotate?
-    //Matrix = Matrix * glm::eulerAngleYXZ(Rot.x, Rot.y, Rot.z);
+    //Matrix = Matrix * glm::eulerAngleYXZ(Rot.x, Rot.y, Rot.z);   
     Matrix =  Matrix * glm::toMat4(qq);
     //Matrix = glm::toMat4(qq) * Matrix;
     //Matrix.rotate(qq);

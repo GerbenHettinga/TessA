@@ -49,54 +49,54 @@ public:
 	void setUniform(const std::string uniform, bool value) {
 		GLuint location = getUniformLocation(uniform);
 
-		if (location > 0)
+		if (location >= 0)
 			glUniform1i(location, value);
 	}
 
 	void setUniform(const std::string uniform, int value) {
 		GLuint location = getUniformLocation(uniform);
 
-		if(location > 0)
+		if(location >= 0)
 			glUniform1i(location, value);
 	}
 
 	void setUniform(const std::string uniform, float value) {
 		GLuint location = getUniformLocation(uniform);
 
-		if (location > 0)
+		if (location >= 0)
 			glUniform1f(location, value);
 	}
 
 	void setUniform(const std::string uniform, const glm::mat4x4& matrix) {
 		GLuint location = getUniformLocation(uniform);
 
-		if (location > 0)
+		if (location >= 0)
 			glUniformMatrix4fv(location, 1, false, glm::value_ptr(matrix));
 	}
 
 	void setUniform(const std::string uniform, const glm::mat3x3& matrix) {
 		GLuint location = getUniformLocation(uniform);
 
-		if (location > 0)
+		if (location >= 0)
 			glUniformMatrix3fv(location, 1, false, glm::value_ptr(matrix));
 	}
 
 	void setUniform(const std::string uniform, const glm::vec3& vec) {
 		GLuint location = getUniformLocation(uniform);
 
-		if (location > 0)
+		if (location >= 0)
 			glUniform3fv(location, 1, &(vec[0]));
 	}
 
 	void setUniform(const std::string uniform, const glm::vec4& vec) {
 		GLuint location = getUniformLocation(uniform);
 
-		if (location > 0)
+		if (location >= 0)
 			glUniform4fv(location, 1, &(vec[0]));
 	}
 
 	void setUniform(const GLuint location, int value) {
-		if (location > 0)
+		if (location >= 0)
 			glUniform1i(location, value);
 	}
 
@@ -108,17 +108,7 @@ public:
 		if (!m_linked)
 			link();
 
-		int e = glGetError();
-		if (e) {
-			std::cout << e << std::endl;
-		}
-
 		glUseProgram(m_program);
-
-		e = glGetError();
-		if (e) {
-			std::cout << e << std::endl;
-		}
 	}
 
 private:

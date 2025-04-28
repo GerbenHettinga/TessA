@@ -256,14 +256,6 @@ void Mesh::construct(std::vector<glm::vec3>& vs,
         polygons[faceValency - 3]++;
     }
 
-    for (int i = 0; i < numVertices; ++i) {
-        auto& outgoings = potentialTwins[i];
-
-        for (auto* outgoing : outgoings) {
-            std::cout << (outgoing->next->target->index) << " " << (outgoing->prev->target->index) << std::endl;
-            assert(outgoing->prev->target == &vertices[i]);
-        }
-    }
     //qDebug() << "Faces" << faces.capacity() << faces.size();
 
     // Outs and Valences of vertices
@@ -274,19 +266,6 @@ void Mesh::construct(std::vector<glm::vec3>& vs,
             size_t len = potentialTwins[k].size();
             vertices[k].val = len;
         }
-    }
-
-    for (int k = 0; k < numVertices; k++) {
-        //assign a random halfedge to start
-        if (!potentialTwins[k].empty()) {
-            vertices[k].out = potentialTwins[k][0];
-            size_t len = potentialTwins[k].size();
-            vertices[k].val = len;
-        }
-    }
-
-    for (int k = 0; k < numVertices; k++) {
-        assert(vertices[k].val == potentialTwins[k].size());
     }
 
     std::unordered_set<size_t> twinless;

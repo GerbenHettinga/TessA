@@ -1,22 +1,25 @@
 #include "customopenglwidget.h"
 #include "imgui.h"
+
 #include <numbers>
+#include <Windows.h>
+#include <filesystem>
 
 void CustomOpenGLWidget::setNonPlanarPolygon(int valency){
-    polygon = new Polygon(valency);
+    //polygon = new TessA::Polygon(valency);
     settings.ObjectDrawMode = false;
     updateBuffers();
 }
 
 void CustomOpenGLWidget::setPolygonObject(std::string filename){
     model.set(filename, &settings);
-    //mesh = new Mesh(ObjectReader::read(filename));
+    
     settings.ObjectDrawMode = true;
     updateBuffers();
 }
 
 void CustomOpenGLWidget::openPolygon(std::string filename) {
-    polygon = new Polygon(ObjectReader::readPoly(filename));
+    //polygon = new TessA::Polygon(ObjectReader::readPoly(filename));
     settings.ObjectDrawMode = false;
     updateBuffers();
 }
@@ -26,9 +29,7 @@ void CustomOpenGLWidget::savePolygon(std::string filename) {
 }
 
 void CustomOpenGLWidget::takeScreenshot() {
-    //QImage ss = this->grabFramebuffer();
-    //std::string fileName = QFileDialog::getSaveFileName();
-    //ss.save(fileName);
+    //TODO:
 }
 
 void CustomOpenGLWidget::findClosest(float x, float y) {
@@ -181,9 +182,6 @@ void CustomOpenGLWidget::keyPressEvent(const SDL_Event& event) {
     }
 }
 
-#include <Windows.h>
-#include <filesystem>
-
 bool getOpenFileName(std::string& path)
 {
     char filename[MAX_PATH];
@@ -275,6 +273,21 @@ void CustomOpenGLWidget::drawUI()
     ImGui::Checkbox("boundary curves", &settings.outlinePhong);
     ImGui::Checkbox("control mesh", &settings.showControlMesh);
     ImGui::Checkbox("patch colours", &settings.patchColoursRF);
+
+    int subdivLevel = model.getSubdivisionLevel();
+    int subdivDegree = model.getSubdivisionDegree();
+    
+    if (ImGui::InputInt("Subdivision degree", &subdivDegree)) {
+        model.setSubdivisionLevel(subdivLevel, subdivDegree);
+
+        updateBuffers();
+    }
+
+    if(ImGui::InputInt("Subdivision level", &subdivLevel)) {
+        model.setSubdivisionLevel(subdivLevel, subdivDegree);
+
+        updateBuffers();
+    }
 
     if (ImGui::Button("dual")) {
         model.dual();

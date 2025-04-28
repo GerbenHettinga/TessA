@@ -64,62 +64,34 @@ Shader* SurfaceRenderer::setShaderUniforms(PolygonShader *ps) {
             shader->setUniform("nMatrix", false);
             break;
         default                                 :
-            getError();
-
             shader = ps->getPhongShader();
             shader->use();
 
-            getError();
-
             shader->setUniform("nMatrix", true);
-            getError();
             shader->setUniform("patchColours", settings->patchColoursRF);
-            getError();
             shader->setUniform("color", settings->m_color);
-            getError();
             shader->setUniform("lightPosition", settings->m_lightPosition);
-            getError();
             shader->setUniform("lightIntensity", settings->m_lightIntensity);
-            getError();
             shader->setUniform("Ka", settings->m_ambient);
-            getError();
             shader->setUniform("Kd", settings->m_diffuse);
-            getError();
             shader->setUniform("Ks", settings->m_specular);
-            getError();
             shader->setUniform("shininess", settings->m_shininess);
-            getError();
             shader->setUniform("surfaceAlpha", settings->surfaceAlpha);
-
-            getError();
     }
 
 
-    getError();
-
     shader->setUniform("matrix", settings->MVP);
-    getError();
     shader->setUniform("normal_matrix", settings->NormalMatrix);
-    getError();
     shader->setUniform("tessInnerLevel", settings->tessInnerLevel);
-    getError();
     shader->setUniform("tessOuterLevel", settings->tessOuterLevel);
-    getError();
     shader->setUniform("alpha", settings->alpha);
-    getError();
     shader->setUniform("WD", settings->WD);
-    getError();
     shader->setUniform("quadNormals", settings->QuadraticNormals);
-    getError();
     shader->setUniform("extraLayer", true);
-
-    getError();
 
     shader->setUniform("avalue", settings->aValue);
     shader->setUniform("bvalue", settings->bValue);
     shader->setUniform("cvalue", settings->cValue);
-
-    getError();
 
     shader->setUniform("dvalue", settings->dValue);
     shader->setUniform("evalue", settings->eValue);
@@ -131,14 +103,10 @@ Shader* SurfaceRenderer::setShaderUniforms(PolygonShader *ps) {
     shader->setUniform("rvalue", settings->rValue);
     shader->setUniform("svalue", settings->sValue);
 
-    getError();
-
     shader->setUniform("fixedCurves", settings->fixedCurves);
     shader->setUniform("captureGeometry", settings->captureGeneratedObject);
     shader->setUniform("outline", settings->outlinePhong);
     shader->setUniform("spokes", settings->outlineSpokes);
-
-    getError();
 
     shader->setUniform("extraLayer", settings->extraLayer);
     shader->setUniform("centreFunctions", settings->centreFunctions);
@@ -152,7 +120,6 @@ Shader* SurfaceRenderer::setShaderUniforms(PolygonShader *ps) {
     shader->setUniform("baseNoiseFrequencyV", settings->noiseFreqV);
     shader->setUniform("maxOctaves", settings->maxOctaves);
 
-    getError();
 
     //shader->setUniform("noiseToRGB", settings->noiseToRGB);
     //shader->setUniform("paramX", settings->paramX);
@@ -166,13 +133,10 @@ Shader* SurfaceRenderer::setShaderUniforms(PolygonShader *ps) {
     shader->setUniform("sineAngle", settings->sineAngle);
     shader->setUniform("jitter", settings->jitter);
 
-    getError();
-
     shader->setUniform("noiseBlendMode", int(settings->NoiseBlendMode));
     shader->setUniform("worleyMode", int(settings->WorleyFunction));
     shader->setUniform("distMetric", int(settings->DistMetric));
 
-    getError();
 
     return shader;
 }

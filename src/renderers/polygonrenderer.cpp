@@ -93,19 +93,29 @@ void PolygonRenderer::updateBuffers(Model& model) {
     std::vector<glm::vec2>& uvs = nm.getUVs();
     std::vector<int>& indices = nm.getIndicesRing();
 
-//    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-//    glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(glm::vec3), verts.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(glm::vec3), verts.data(), GL_STATIC_DRAW);
 
-//    glBindBuffer(GL_ARRAY_BUFFER, nbo);
-//    glBufferData(GL_ARRAY_BUFFER, norms.size() * sizeof(glm::vec3), norms.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, nbo);
+    glBufferData(GL_ARRAY_BUFFER, norms.size() * sizeof(glm::vec3), norms.data(), GL_STATIC_DRAW);
 
-//    glBindBuffer(GL_ARRAY_BUFFER, uvbo);
-//    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), uvs.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, uvbo);
+    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), uvs.data(), GL_STATIC_DRAW);
 
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint), indices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW);
 }
 
+void PolygonRenderer::paintTessellation(int valency, int indexBufPointer, int numPatches) {
+    glPatchParameteri(GL_PATCH_VERTICES, (unsigned int)valency);
+
+    if (valency < 5) {
+        glDrawArrays(GL_PATCHES, indexBufPointer, numPatches);
+    }
+    else {
+        glDrawArraysInstanced(GL_PATCHES, indexBufPointer, numPatches, (unsigned int)(valency));
+    }
+}
 
 void PolygonRenderer::render(Model& model) {
     PolygonShader* polyShader;
@@ -146,7 +156,24 @@ void PolygonRenderer::render(Model& model) {
             break;
     }
 
-//    if(quadGregory) {
-//        polyShader = quadGreg;
-//    }
+    setShaderUniforms(polyShader);
+
+    glBindVertexArray(vao);
+
+    int bIdx = 0;
+    int numPatches;
+
+    for (int i = 3; i < 9; ++i) {
+        Mesh* currentMesh = model.getMesh();
+
+        bool a = currentMesh->hasFacesOfValency(i);
+        if (!currentMesh->hasFacesOfValency(i)) {
+            continue;
+        }
+        numPatches = currentMesh->getNumberOfFaces(i) * i;
+        paintTessellation(i, bIdx, numPatches);
+        bIdx += numPatches;
+    }
+
+    glBindVertexArray(0);
 }

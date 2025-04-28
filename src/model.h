@@ -30,7 +30,11 @@ public:
     ControlMesh& getControlMesh()                       { return controlmesh; }
     QuadMesh& getQuadMesh()                             { return quadmesh; }
 
-    void setSubdivisionLevel(unsigned degree, unsigned level);
+
+    
+    int getSubdivisionDegree();
+    int getSubdivisionLevel();
+    void setSubdivisionLevel(unsigned level, unsigned degree);
     void dual();
     void evenSmooth();
     void oddSmooth();
@@ -39,6 +43,8 @@ public:
     void update();
 
 private:
+    SubdivisionMesh& getSubdivisionMesh();
+    
     Mesh mesh;
     std::vector<Mesh> meshes;
 

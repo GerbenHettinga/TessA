@@ -26,6 +26,8 @@ void ControlMeshRenderer::initBuffers() {
 
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+    glBindVertexArray(0);
 }
 
 void ControlMeshRenderer::initShaders() {
@@ -42,11 +44,14 @@ void ControlMeshRenderer::initShaders() {
 void ControlMeshRenderer::updateBuffers(Model &model) {
     ControlMesh& m = model.getControlMesh();
 
+    auto& vertices = m.getVertices();
+    auto& indices = m.getIndices();
+
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, m.getVertices().size() * sizeof(glm::vec3), m.getVertices().data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m.getIndices().size() * sizeof(unsigned), m.getIndices().data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW);
 }
 
 void ControlMeshRenderer::render(Model& model) {
@@ -58,6 +63,7 @@ void ControlMeshRenderer::render(Model& model) {
     //render the wireframe
     glEnable(GL_PRIMITIVE_RESTART);
     glPrimitiveRestartIndex(0xFFFFFFFF);
+
     glDrawElements(GL_LINE_LOOP, model.getControlMesh().getIndices().size(), GL_UNSIGNED_INT, (void *) 0);
 
     glDisable(GL_PRIMITIVE_RESTART);

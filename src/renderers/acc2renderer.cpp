@@ -75,16 +75,11 @@ void ACC2Renderer::updateBuffers(Model& model) {
 void ACC2Renderer::paintTessellation(int valency, int indexBufPointer, int numPatches) {
    Shader* shader = setShaderUniforms(polyShaders[valency-3]);
 
-   getError();
-
    glPatchParameteri(GL_PATCH_VERTICES, (unsigned int) valency);
-
-   getError();
 
    if(valency < 5) {
        glDrawArrays(GL_PATCHES, indexBufPointer, numPatches);
 
-       getError();
    } else {
        if(settings->TriangulationMode == TriangulationModes::Minimal) {
            shader->setUniform("triangulation", 0);
