@@ -4,6 +4,7 @@
 #include <numbers>
 #include <Windows.h>
 #include <filesystem>
+#include <algorithm>
 
 void CustomOpenGLWidget::setNonPlanarPolygon(int valency){
     //polygon = new TessA::Polygon(valency);
@@ -49,6 +50,9 @@ void CustomOpenGLWidget::mouseMoveEvent(const SDL_Event& event) {
     if (event.button.button == SDL_BUTTON_LEFT) {
         int x, y;
         SDL_GetMouseState(&x, &y);
+        
+        x = std::clamp(x, 0, m_width);
+        y = std::clamp(y, 0, m_height);
 
         glm::vec2 sPos = toNormalizedScreenCoordinates(x, y);
         glm::vec3 newVec = glm::vec3(sPos.x, sPos.y, 0.0);

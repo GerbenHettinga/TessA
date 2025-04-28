@@ -234,15 +234,14 @@ void CustomOpenGLWidget::setMatrix(bool Reset) {
         Matrix = glm::mat4x4(1.0f);
     }
 
+    
     Matrix = glm::translate(Matrix, Trans);
-    //todo: how to rotate?
-    //Matrix = Matrix * glm::eulerAngleYXZ(Rot.x, Rot.y, Rot.z);   
-    Matrix =  Matrix * glm::toMat4(qq);
-    //Matrix = glm::toMat4(qq) * Matrix;
-    //Matrix.rotate(qq);
+    Matrix = Matrix * glm::toMat4(qq);
     Matrix = glm::scale(Matrix, glm::vec3(Scale));
+    
+    glm::mat4 modelView = View * Matrix;
+    
+    settings.NormalMatrix = glm::transpose(glm::inverse(glm::mat3x3(modelView)));
 
-    settings.NormalMatrix = glm::mat3x3(glm::transpose(Matrix));
-
-    settings.MVP = Projection * View * Matrix;
+    settings.MVP = Projection * modelView;
 }
